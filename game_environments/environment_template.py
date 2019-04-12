@@ -6,11 +6,14 @@ import random
 class Environment:
     # TODO - do something about code duplication for the multiple recursive methods
     # TODO - read into Cython for computationally heavy recursion
+    # TODO - make max reward optional, if None - find the max reward recursively through state_space
 
-    def __init__(self, state_space, action_space, action_vectors, start_position=None):
+    def __init__(self, state_space, max_reward, action_space, action_vectors, start_position=None):
         self.state_space = state_space
         self.current_state_num = -1
         self.total_num_states = -1
+
+        self.__max_reward = max_reward
 
         self.action_space = action_space
         self.action_vectors = action_vectors
@@ -36,6 +39,8 @@ class Environment:
         raise NotImplementedError
 
     '''Used to execute an action in the game'''
+    # at the moment this act() method implies movement of an actor through the state_space
+    # todo - generalise this method to not imply movement? - could have 2 methods (act_move, act_place)
     def act(self, action):
         self.__test_action(action)
 
@@ -48,6 +53,13 @@ class Environment:
     '''Returns a randomly selected action from the set action_space'''
     def sample_action(self):
         return self.action_space[random.randint(0, len(self.action_space) - 1)]
+
+    '''Returns true if the last reward obtained equals the maximum reward possible, otherwise returns false'''
+    def is_done(self):
+        if self.last_reward == self.__max_reward:
+            return True
+        else:
+            return False
 
     '''
     Tests if action is possible, executes action if possible

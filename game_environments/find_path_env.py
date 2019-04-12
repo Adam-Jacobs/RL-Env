@@ -13,23 +13,15 @@ class FindPath(Environment):
         action_space = [0, 1, 2, 3]  # [North, East, South, West]
         action_vectors = [[-1, 0], [0, 1], [1, 0], [0, -1]]  # How the actions will effect the position
 
-        super().__init__(state_space, action_space, action_vectors, start_position)
-
-        self.__max_reward = 1
+        super().__init__(state_space, 1, action_space, action_vectors, start_position)
 
     '''Overrides Environment.step'''
     def step(self, action):
         self.act(action)
         return self.current_observation, self.last_reward, self.is_done(), None
 
-    def is_done(self):
-        if self.last_reward == self.__max_reward:
-            return True
-        else:
-            return False
-
     '''Overrides Environment.render'''
-    def render(self): # does nothing atm
+    def render(self):  # does nothing atm
         # Loop through obervation, plot character space
         # Loop through state_space, plot reward areas
         # return a matplotlib plot of the game
